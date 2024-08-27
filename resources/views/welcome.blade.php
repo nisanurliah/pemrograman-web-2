@@ -1,42 +1,44 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Profile</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  </head>
-  <body>
-    <div class="container">
-        <div class="row mt-4">
-            @foreach ($profiles as $profile)
-                <div class="card mt-4">
-                    <div class="card-head">
-                        <h1>{{ $profile->nama }}</h1>
-                    </div>
-                    <div class="card-body">
-                        <table>
-                            <tr>
-                                <td>NIM</td>
-                                <td>:</td>
-                                <td>{{ $profile->nim }}</td>
-                            </tr>
-                            <tr>
-                                <td>Kelas</td>
-                                <td>:</td>
-                                <td>{{ $profile->prodi }}</td>
-                            </tr>
-                            <tr>
-                                <td>Alamat E-mail</td>
-                                <td>:</td>
-                                <td><a href="mailto:{{ $profile->email }}">{{ $profile->email }}</a></td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-            @endforeach
-        </div>
+@extends('layouts.app')
+
+@section('title', 'Halaman Profile')
+
+@section('heading', 'Halaman Profile')
+
+@section('content')
+
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-2">
+                @if (!$profile->avatar == null)
+                    <img class="img-profile rounded-circle" width="100px" height="100px" src="{{ asset('storage/'. $profile->avatar) }}" alt="...">
+                @else
+                    <img class="img-profile rounded-circle" width="100px" height="100px" src="{{ asset('img/undraw_profile.svg') }}" alt="...">
+                @endif
+            </div>
+            <div class="col-md-10">
+                <h1>{{ $profile->nama }}</h1>
+                <a href="{{ route('profile-upload', [$profile->id]) }}" class="btn btn-primary">Ubah Foto Profile</a>
+            </div>
+        </div>        
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-  </body>
-</html>
+    <div class="card-body">
+        <table>
+            <tr>
+                <td>NIM</td>
+                <td>:</td>
+                <td>{{ $profile->nim }}</td>
+            </tr>
+            <tr>
+                <td>Kelas</td>
+                <td>:</td>
+                <td>{{ $profile->prodi }}</td>
+            </tr>
+            <tr>
+                <td>Alamat E-mail</td>
+                <td>:</td>
+                <td><a href="mailto:{{ $profile->email }}">{{ $profile->email }}</a></td>
+            </tr>
+        </table>
+    </div>
+
+@endsection

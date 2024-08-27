@@ -14,5 +14,6 @@ class Profile extends Model
         'nim',
         'prodi',
         'email',
+        'avatar',
     ];
 }

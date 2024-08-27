@@ -4,19 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Models\Mahasiswa;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class MahasiswaController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $mahasiswas = Mahasiswa::all();
+        $user = $request->session()->get('user');
+        $profile = DB::table('profiles')->where('email', $user->email)->select('profiles.*')->first();
 
-        return view('mahasiswa.index', compact('mahasiswas'));
+        return view('mahasiswa.index', compact('mahasiswas', 'user', 'profile'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
-        return view('mahasiswa.create');
+        $user = $request->session()->get('user');
+        $profile = DB::table('profiles')->where('email', $user->email)->select('profiles.*')->first();
+        
+        return view('mahasiswa.create', compact('user', 'profile'));
     }
 
     public function store(Request $request)
@@ -33,21 +39,25 @@ class MahasiswaController extends Controller
 
         session()->flash('success', 'Data Mahasiswa berhasil ditambahkan!');
 
-        return redirect('/');
+        return redirect('/mahasiswa');
     }
 
-    public function edit(Mahasiswa $mahasiswa)
+    public function edit(Request $request, Mahasiswa $mahasiswa)
     {
-        return view('mahasiswa.edit', compact('mahasiswa'));
+        $user = $request->session()->get('user');
+        $profile = DB::table('profiles')->where('email', $user->email)->select('profiles.*')->first();
+
+        return view('mahasiswa.edit', compact('mahasiswa','user', 'profile'));
     }
 
     public function update(Request $request, Mahasiswa $mahasiswa)
     {
 
         $validated = $request->validate([
-            'nim' => 'required|unique:mahasiswas|max:10',
+            'nim' => 'required|max:10',
             'nama' => 'required|max:50'
         ]);
+
 
         $mahasiswa->update([
             'nim' => $request->nim,
@@ -56,7 +66,7 @@ class MahasiswaController extends Controller
 
         session()->flash('success', 'Data Mahasiswa berhasil diubah!');
 
-        return redirect('/');
+        return redirect('/mahasiswa');
     }
 
     public function delete(Mahasiswa $mahasiswa)
@@ -65,6 +75,6 @@ class MahasiswaController extends Controller
 
         session()->flash('success', 'Data Mahasiswa berhasil dihapus!');
 
-        return redirect('/');
+        return redirect('/mahasiswa');
     }
 }
